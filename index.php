@@ -1,4 +1,10 @@
 <?php
+/*EDITAN BAYU UTUK INSTALASI*/
+
+	include('install/index.php');
+
+
+/*SAMPAI SINI*/
 /**
  * CodeIgniter
  *
