@@ -154,6 +154,11 @@ class Security_test extends CI_TestCase {
 			'<img src="b on=">on=">"x onerror="alert&#40;1&#41;">',
 			$this->security->xss_clean('<img src="b on="<x">on=">"x onerror="alert(1)">')
 		);
+
+		$this->assertEquals(
+			"\n>&lt;!-\n<b d=\"'e><iframe onload=alert&#40;1&#41; src=x>\n<a HREF=\">\n",
+			$this->security->xss_clean("\n><!-\n<b\n<c d=\"'e><iframe onload=alert(1) src=x>\n<a HREF=\"\">\n")
+		);
 	}
 
 	// --------------------------------------------------------------------
@@ -269,6 +274,12 @@ class Security_test extends CI_TestCase {
 		$decoded = $this->security->entity_decode($encoded);
 
 		$this->assertEquals('<div>Hello <b>Booya</b></div>', $decoded);
+
+		$this->assertEquals('colon:',    $this->security->entity_decode('colon&colon;'));
+		$this->assertEquals("NewLine\n", $this->security->entity_decode('NewLine&NewLine;'));
+		$this->assertEquals("Tab\t",     $this->security->entity_decode('Tab&Tab;'));
+		$this->assertEquals("lpar(",     $this->security->entity_decode('lpar&lpar;'));
+		$this->assertEquals("rpar)",     $this->security->entity_decode('rpar&rpar;'));
 
 		// Issue #3057 (https://github.com/bcit-ci/CodeIgniter/issues/3057)
 		$this->assertEquals(
